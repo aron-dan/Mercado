@@ -2,6 +2,10 @@ package Mercado;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.io.InputStream;
+
+import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 
 public class Mercado {
@@ -36,6 +40,22 @@ public class Mercado {
     "\n"+"Sahampo Mais Barato: "+cal.maisBarato(shampo)+
     "\n"+"Biscoito Mais Barato: "+cal.maisBarato(biscoito)+
     "\n"+"Leite Mais Barato: "+cal.maisBarato(leite));
+
+
+    int option = input.nextInt();
+
+    switch(option){
+      case 1:
+        comprarProduto();
+        break;
+
+      case 2:
+        listarProduto();
+        break;
+
+      case 3:
+        System.exit();
+    }
   }
 
   
