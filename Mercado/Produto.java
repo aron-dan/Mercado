@@ -1,35 +1,48 @@
-
 package Mercado;
-import javax.swing.JOptionPane;
+
 
 public class Produto {
-  public String nome;
-  public int quantidade;
-  public String unidade;
-  public double preco;
+  private static int count = 1;
 
-  public Produto(String nome, Double preco){
+  private int id;
+  private String nome;
+  private Double preco;
+
+
+  public Produto(int id, String nome, Double preco)
+  {
+    this.id = count;
     this.nome = nome;
     this.preco = preco;
+    Produto.count =+ 1;
   }
 
-  public String getNome(){
+  public int getId() {
+    return id;
+  }
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getNome() {
     return nome;
   }
 
-  public void setNome(String nome){
+  public void setNome(String nome) {
     this.nome = nome;
   }
 
-  public Double getPreco(){
+  public Double getPreco() {
     return preco;
   }
 
-  public void setNome(Double preco){
+  public void setPreco(Double preco) {
     this.preco = preco;
   }
 
-  public void exibirProduto(){
-    JOptionPane.showMessageDialog(null, "Nome do produto: " + nome + "\nQuantidade: "+quantidade+"\nUnidade de Medida: "+unidade+"\nPrço: "+preco);
+  public String toString()
+  {
+    return "Id: "+this.getId() + "Nome: "+ this.getNome()+"Preço: "+Utils.doubleToString(this.getPreco());
   }
+  
 }

@@ -1,62 +1,191 @@
 package Mercado;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+public class Mercado 
+{
+  private static Scanner input = new Scanner(System.in);
+  private static ArrayList<Produto> produtos;
+  private static Map<Produto, Integer> carrinho;
 
-import java.io.InputStream;
-
-import javax.swing.InputMap;
-import javax.swing.JOptionPane;
-
-public class Mercado {
-
-  public static void main(String[] args) {
-
-    Calculos cal = new Calculos();
-
-    List<Shampo> shampo = new ArrayList<>();
-    shampo.add(new Shampo("Dove", 15.99, 2));
-    shampo.add(new Shampo("Skala", 29.99, 0));
-    shampo.add(new Shampo("SaloonLine", 12.99, 4));
+  public static void main(String[] args) 
+  {
     
+    produtos = new ArrayList<>();
+    carrinho = new HashMap<>();
 
-    List<Biscoito> biscoito = new ArrayList<>();
-    biscoito.add(new Biscoito("Trakinas", 1.99, 6));
-    biscoito.add(new Biscoito("Baudoco", 3.69, 2));
-    biscoito.add(new Biscoito("CreamCkack", 0.99, 0));
+    /*
+     * Produto produto1 = new Produto(1, "Sabonete", 1.99);
+     * produtos.add(produto1);
+     * 
+     * Produto produto2 = new Produto(2, "Coca-Cola", 10.99);
+     * produtos.add(produto2);
+     * 
+     * Produto produto3 = new Produto(3, "Peito de Frango", 7.69);
+     * produtos.add(produto3);
+     */
 
-    List<Leite> leite = new ArrayList<>();
-    leite.add(new Leite("Longa Vida", 5.49, 3));
-    leite.add(new Leite("Betim", 3.99, 5));
-    leite.add(new Leite("BH", 5.45, 4));
+    menu();
+  }
 
-
-    JOptionPane.showMessageDialog(null,"Media Shampo:"+cal.media(shampo)+
-    "\n"+"Media Biscoito: "+cal.media(biscoito)+
-    "\n"+"Media Leite: "+cal.media(leite)+
-    "\n"+"Shampo Mais Caro: "+cal.maisCaro(shampo)+
-    "\n"+"Biscoito Mais Caro: "+cal.maisCaro(biscoito)+
-    "\n"+"Leite Mais Caro: "+cal.maisCaro(leite)+
-    "\n"+"Sahampo Mais Barato: "+cal.maisBarato(shampo)+
-    "\n"+"Biscoito Mais Barato: "+cal.maisBarato(biscoito)+
-    "\n"+"Leite Mais Barato: "+cal.maisBarato(leite));
-
+  private static void menu() 
+  {
+    System.out.println("1 - cadastrar");
+    System.out.println("2 - listar ");
+    System.out.println("3 - comprar");
+    System.out.println("4 - carrinho");
+    System.out.println("5 - Finalizar compra");
+    System.out.println("6 - Sair do programa");
 
     int option = input.nextInt();
 
-    switch(option){
+    switch (option) 
+    {
       case 1:
-        comprarProduto();
+        cadastrarProdutos();
         break;
 
       case 2:
-        listarProduto();
+        listarProdutos();
         break;
 
       case 3:
-        System.exit();
+        comprarProdutos();
+        break;
+
+      case 4:
+        verCarrinho();
+        break;
+
+      case 5:
+      finalizarCompra();
+        break;
+
+      case 6:
+        System.exit(0);
+
+      default:
+        System.out.println("Opção invalida");
+        menu();
+        break;
     }
   }
 
+
+
+  private static void cadastrarProdutos() 
+  {
+
+    System.out.println("Id do produto");
+    int id = input.nextInt();
+
+    System.out.println("Nome do produto");
+    String nome = input.next();
+
+    System.out.println("Preco do produto");
+    Double preco = input.nextDouble();
+
+    Produto produto = new Produto(id, nome, preco);
+    produtos.add(produto);
+
+    System.out.println(produto.getNome() + " Cadastrado com sucesso");
+    menu();
+
+  }
+
+  private static void listarProdutos() 
+  {
+    for (Produto p : produtos) {
+      System.out.println(p);
+    }
+    menu();
+  }
+
+  private static void comprarProdutos() 
+  {
+    System.out.println("Codigo dos produtos");
+
+    for (Produto p : produtos) 
+    {
+      System.out.println(p);
+    }
+    int id = Integer.parseInt(input.next());
+    boolean isPresent = false;
+
+    for (Produto p : produtos) 
+    {
+      if (p.getId() == id) {
+        int qtd = 0;
+        try 
+        {
+          qtd = carrinho.get(p);
+          carrinho.put(p, qtd + 1);
+        } 
+        catch (NullPointerException e) 
+        {
+          carrinho.put(p, 1);
+        }
+        System.out.println(p.getNome() + " adicionado ao carrinho");
+        isPresent = true;
+
+        if (isPresent) 
+        {
+          System.out.println("Deseja adicionar masi itens? y/n");
+          String option = input.next();
+
+          if (option == "y") 
+          {
+            comprarProdutos();
+          } 
+          else 
+          {
+            System.exit(id);
+          }
+        }
+
+      } 
+      else 
+      {
+        System.out.println("Produto não encontrado");
+        menu();
+      }
+    }
+  }
+
+  private static void verCarrinho() 
+  {
+    System.out.println("Produtos no carrinho");
+
+    if(carrinho.size()>0)
+    {
+      for (Produto p : carrinho.keySet())
+        {
+          System.out.println("Produto: "+ p +" Quantidade: "+ carrinho.get(p));
+        }
+    }
+    else
+    {
+      System.out.println("Não há itens no carrinho");
+    }
+    menu();
+  }
+
+  public static void finalizarCompra()
+  {
+    Double valorDaCompra = 0.0;
+    System.out.println("Lista de produtos:");
+
+    for(Produto p : carrinho.keySet())
+    {
+      int qtd = carrinho.get(p);
+      valorDaCompra += p.getPreco()* qtd;
+      System.out.println("quantidade: "+qtd);
+      System.out.println("Valor da compra: "+ Utils.doubleToString(valorDaCompra));
+      carrinho.clear();
+      menu();
+    }
+  }
   
 }
